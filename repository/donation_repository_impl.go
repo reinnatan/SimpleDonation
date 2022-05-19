@@ -59,7 +59,6 @@ func (repository *donationRepositoryImpl) UpdateDonation(key string, donation en
 }
 
 func (repository *donationRepositoryImpl) DeleteDonation(key string) {
-
 	_, err := repository.Client.Get(key).Result()
 	if err != nil {
 		panic(err)
