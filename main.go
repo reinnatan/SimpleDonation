@@ -4,27 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"simpedonationapps/model"
 
 	"github.com/go-redis/redis"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
-
-type Donation struct {
-	Id          string
-	Description string `json:"description" xml:"description" form:"description"`
-	Total       int64  `json:"total" xml:"total" form:"total"`
-	DueDate     int64  `json:"dueDate" xml:"dueDate" form:"dueDate"`
-	Type        string `json:"type" xml:"type" form:"type"`
-}
-
-type Donatur struct {
-	Id         string `json:"id" xml:"id" form:"id"`
-	Name       string `json:"name" xml:"name" form:"name"`
-	DueDate    int64  `json:"dueDate" xml:"dueDate" form:"dueDate"`
-	IdDonation string `json:"idDonation" xml:"idDonation" form:"idDonation"`
-	Type       string `json:"type" xml:"type" form:"type"`
-}
 
 type Message struct {
 	Message string `json:"message" xml:"message" form:"message"`
@@ -45,7 +30,7 @@ func main() {
 	})
 
 	app.Post("/create-donation", func(c *fiber.Ctx) error {
-		donation := new(Donation)
+		donation := new(model.Donation)
 		if err := c.BodyParser(donation); err != nil {
 			return err
 		}
@@ -72,7 +57,7 @@ func main() {
 			panic(err)
 		}
 
-		donation := new(Donation)
+		donation := new(model.Donation)
 		if err := c.BodyParser(donation); err != nil {
 			return err
 		}
