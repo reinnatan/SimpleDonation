@@ -7,3 +7,8 @@ type Donation struct {
 	DueDate     int64  `json:"dueDate" xml:"dueDate" form:"dueDate"`
 	Type        string `json:"type" xml:"type" form:"type"`
 }
+
+type GeneralResponse struct {
+	Message      string
+	ResponseCode int64
+}

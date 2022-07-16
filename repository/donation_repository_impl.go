@@ -2,11 +2,10 @@ package repository
 
 import (
 	"encoding/json"
-	"fmt"
 	"simpedonationapps/entity"
 
 	"github.com/go-redis/redis"
-	"github.com/gofiber/fiber/v2/internal/uuid"
+	"github.com/google/uuid"
 )
 
 type donationRepositoryImpl struct {
@@ -26,47 +25,47 @@ func NewDonationRepository() donationRepositoryImpl {
 
 }
 
-func (repository *donationRepositoryImpl) CreateDonation(donation entity.Donation) {
+func (repository *donationRepositoryImpl) CreateDonation(donation entity.Donation) (bool, string) {
 	randomString := uuid.New().String()
 	donationJSON, err := json.Marshal(donation)
 
 	if err != nil {
-		panic(err)
+		return false, err.Error()
 	}
 	err1 := repository.Client.Set(randomString, donationJSON, 0).Err()
 	if err1 != nil {
-		panic(err1)
+		return false, err.Error()
 	}
-
+	return true, ""
 }
 
-func (repository *donationRepositoryImpl) UpdateDonation(key string, donation entity.Donation) {
+func (repository *donationRepositoryImpl) UpdateDonation(key string, donation entity.Donation) (bool, string) {
 	_, err := repository.Client.Get(key).Result()
 	if err != nil {
-		panic(err)
+		return false, err.Error()
 	}
 
 	donationJSON, err := json.Marshal(donation)
 	if err != nil {
-		panic(err)
+		return false, err.Error()
 	}
 
 	err1 := repository.Client.Set(key, donationJSON, 0).Err()
 	if err1 != nil {
-		panic(err)
+		return false, err.Error()
 	}
-
+	return true, ""
 }
 
-func (repository *donationRepositoryImpl) DeleteDonation(key string) {
+func (repository *donationRepositoryImpl) DeleteDonation(key string) (bool, string) {
 	_, err := repository.Client.Get(key).Result()
 	if err != nil {
-		panic(err)
+		return false, err.Error()
 	}
 
 	val := repository.Client.Del(key)
 	if val.Val() == 0 {
-		panic(fmt.Errorf("Key %s couldn't be delete"))
+		return false, err.Error()
 	}
-
+	return true, ""
 }
